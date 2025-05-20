@@ -35,7 +35,7 @@ module.exports = {
       },
     },
     // Associations
-    organizationId: {
+    organization: {
       model: 'organization',
       required: true,
     },

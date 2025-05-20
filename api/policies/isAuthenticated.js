@@ -11,6 +11,7 @@ module.exports = async function (req, res, proceed) {
 
     if (!token) {
       return res.status(401).json({
+        status: 'error',
         error: sails.config.responses.AUTH.NOT_AUTHENTICATED,
         message: 'No token provided'
       });
@@ -18,16 +19,17 @@ module.exports = async function (req, res, proceed) {
 
     // Verify token
     const decoded = jwt.verify(token, sails.config.jwt.secret);
-    console.log(decoded);
 
     // Find user
     const user = await User.findOne({ 
       id: decoded.id,
       status: 'active',
+      deletedAt: 0
     });
 
     if (!user) {
       return res.status(401).json({
+        status: 'error',
         error: sails.config.responses.AUTH.NOT_AUTHENTICATED,
         message: 'User not found or inactive'
       });
@@ -41,6 +43,7 @@ module.exports = async function (req, res, proceed) {
 
     if (err.name === 'TokenExpiredError') {
       return res.status(401).json({
+        status: 'error',
         error: sails.config.responses.AUTH.TOKEN_EXPIRED,
         message: 'Token has expired',
         expiredAt: err.expiredAt
@@ -49,12 +52,14 @@ module.exports = async function (req, res, proceed) {
 
     if (err.name === 'JsonWebTokenError') {
       return res.status(401).json({
+        status: 'error',
         error: sails.config.responses.AUTH.INVALID_TOKEN,
         message: 'Invalid token'
       });
     }
 
     return res.status(401).json({
+      status: 'error',
       error: sails.config.responses.AUTH.NOT_AUTHENTICATED,
       message: 'Authentication failed'
     });

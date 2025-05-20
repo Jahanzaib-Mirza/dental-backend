@@ -73,11 +73,11 @@ module.exports = {
       defaultsTo: 0,
     },
     // Organization and Location references
-    organizationId: {
+    organization: {
       model: 'organization',
       required: true,
     },
-    locationId: {
+    location: {
       model: 'location',
       required: true,
     },

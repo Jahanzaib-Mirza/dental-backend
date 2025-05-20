@@ -9,18 +9,27 @@ module.exports = {
     try {
       // Only owner can create users
       if (req.user.role !== 'owner') {
-        return res.status(403).json({ error: sails.config.responses.AUTH.UNAUTHORIZED });
+        return res.status(403).json({ 
+          status: 'error',
+          error: sails.config.responses.AUTH.UNAUTHORIZED 
+        });
       }
 
       const { email, name, phone, role, gender, age, experience, specialization } = req.body;
       if (!email || !name || !phone || !role) {
-        return res.status(400).json({ error: sails.config.responses.AUTH.REQUIRED_FIELDS_MISSING });
+        return res.status(400).json({ 
+          status: 'error',
+          error: sails.config.responses.AUTH.REQUIRED_FIELDS_MISSING 
+        });
       }
 
       // Check if user already exists
       const existingUser = await User.findOne({ email });
       if (existingUser) {
-        return res.status(409).json({ error: sails.config.responses.AUTH.EMAIL_EXISTS });
+        return res.status(409).json({ 
+          status: 'error',
+          error: sails.config.responses.AUTH.EMAIL_EXISTS 
+        });
       }
 
       // Generate password
@@ -33,8 +42,8 @@ module.exports = {
         name,
         phone,
         role,
-        organizationId: req.user.organizationId,
-        locationId: req.user.locationId
+        organization: req.user.organization,
+        location: req.user.location
       };
       if (gender) userData.gender = gender;
       if (age) userData.age = age;
@@ -54,11 +63,14 @@ module.exports = {
       return res.status(201).json({
         status: 'success',
         message: 'User created and credentials sent via email.',
-        user
+        data: user
       });
     } catch (err) {
       sails.log.error('Error creating user:', err);
-      return res.status(500).json({ error: sails.config.responses.GENERIC.SERVER_ERROR });
+      return res.status(500).json({ 
+        status: 'error',
+        error: sails.config.responses.GENERIC.SERVER_ERROR 
+      });
     }
   },
 
@@ -66,12 +78,15 @@ module.exports = {
     try {
       // Check if user has permission to view users
       if (req.user.role !== 'owner' && req.user.role !== 'receptionist') {
-        return res.status(403).json({ error: sails.config.responses.AUTH.UNAUTHORIZED });
+        return res.status(403).json({ 
+          status: 'error',
+          error: sails.config.responses.AUTH.UNAUTHORIZED 
+        });
       }
 
       // Build query based on user role
       const query = {
-        locationId: req.user.locationId,
+        location: req.user.location,
         role: 'doctor',
         status: 'active',
         deletedAt: 0
@@ -91,7 +106,10 @@ module.exports = {
       });
     } catch (err) {
       sails.log.error('Error fetching users:', err);
-      return res.status(500).json({ error: sails.config.responses.GENERIC.SERVER_ERROR });
+      return res.status(500).json({ 
+        status: 'error',
+        error: sails.config.responses.GENERIC.SERVER_ERROR 
+      });
     }
   },
 
@@ -109,18 +127,20 @@ module.exports = {
         education,
         email,
         role,
-
       } = req.body;
 
       // Find the user
       const user = await User.findOne({
         id,
-        locationId: req.user.locationId,
+        location: req.user.location,
         deletedAt: 0
       });
 
       if (!user) {
-        return res.status(404).json({ error: sails.config.responses.GENERIC.NOT_FOUND });
+        return res.status(404).json({ 
+          status: 'error',
+          error: sails.config.responses.GENERIC.NOT_FOUND 
+        });
       }
 
       // Build update data based on role and provided fields
@@ -149,8 +169,7 @@ module.exports = {
       }
 
       // Update user
-      const updatedUser = await User.updateOne({ id })
-        .set(updateData);
+      const updatedUser = await User.updateOne({ id }).set(updateData);
 
       return res.status(200).json({
         status: 'success',
@@ -159,7 +178,10 @@ module.exports = {
       });
     } catch (err) {
       sails.log.error('Error updating user:', err);
-      return res.status(500).json({ error: sails.config.responses.GENERIC.SERVER_ERROR });
+      return res.status(500).json({ 
+        status: 'error',
+        error: sails.config.responses.GENERIC.SERVER_ERROR 
+      });
     }
   }
 }; 

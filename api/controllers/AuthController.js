@@ -49,7 +49,7 @@ module.exports = {
         address: organizationAddress,
         phone: organizationPhone || phone, // Use user's phone if org phone not provided
         email: organizationEmail || email, // Use user's email if org email not provided
-        organizationId: organization.id,
+        organization: organization.id,
       }).fetch();
 
       // Create owner user
@@ -59,8 +59,8 @@ module.exports = {
         name,
         phone,
         role: "owner",
-        organizationId: organization.id,
-        locationId: location.id,
+        organization: organization.id,
+        location: location.id,
       }).fetch();
 
       // Update organization with owner reference
@@ -95,12 +95,18 @@ module.exports = {
 
       const user = await User.findOne({ email }).populateAll();
       if (!user) {
-        return res.status(401).json({ error: sails.config.responses.AUTH.INVALID_CREDENTIALS });
+        return res.status(401).json({ 
+          status: 'error',
+          error: sails.config.responses.AUTH.INVALID_CREDENTIALS 
+        });
       }
 
       const isValidPassword = await User.verifyPassword.call(user, password);
       if (!isValidPassword) {
-        return res.status(401).json({ error: sails.config.responses.AUTH.INVALID_CREDENTIALS });
+        return res.status(401).json({ 
+          status: 'error',
+          error: sails.config.responses.AUTH.INVALID_CREDENTIALS 
+        });
       }
 
       // Generate JWT token
@@ -114,12 +120,16 @@ module.exports = {
       });
 
       return res.json({
+        status: 'success',
         message: 'Login successful',
-        user
+        data: user
       });
     } catch (err) {
       sails.log.error('Error in login:', err);
-      return res.status(500).json({ error: sails.config.responses.GENERIC.SERVER_ERROR });
+      return res.status(500).json({ 
+        status: 'error',
+        error: sails.config.responses.GENERIC.SERVER_ERROR 
+      });
     }
   },
 
@@ -128,20 +138,30 @@ module.exports = {
     try {
       const user = await User.findOne({ id: req.user.id });
       if (!user) {
-        return res.status(404).json({ error: 'User not found' });
+        return res.status(404).json({ 
+          status: 'error',
+          error: sails.config.responses.GENERIC.NOT_FOUND 
+        });
       }
 
       // Get organization and location details
-      const organization = await Organization.findOne({ id: user.organizationId });
-      const location = await Location.findOne({ id: user.locationId });
+      const organization = await Organization.findOne({ id: user.organization });
+      const location = await Location.findOne({ id: user.location });
 
       return res.json({
-        user,
-        organization,
-        location,
+        status: 'success',
+        data: {
+          user,
+          organization,
+          location,
+        }
       });
     } catch (err) {
-      return res.status(500).json({ error: 'Error fetching profile' });
+      sails.log.error('Error fetching profile:', err);
+      return res.status(500).json({ 
+        status: 'error',
+        error: sails.config.responses.GENERIC.SERVER_ERROR 
+      });
     }
   },
 }; 

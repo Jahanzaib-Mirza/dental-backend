@@ -13,10 +13,10 @@ module.exports = {
   create: async function(req, res) {
     try {
       const {
-        patientId,
-        doctorId,
-        treatmentId,
-        appointmentId,
+        patient,
+        doctor,
+        treatment,
+        appointment,
         reportType,
         title,
         description,
@@ -30,7 +30,7 @@ module.exports = {
       if (req.files && req.files.length > 0) {
         for (const file of req.files) {
           const result = await cloudinary.uploader.upload(file.path, {
-            folder: `dental-clinic/reports/${patientId}`,
+            folder: `dental-clinic/reports/${patient}`,
             resource_type: 'auto',
           });
 
@@ -49,10 +49,10 @@ module.exports = {
 
       // Create report
       const report = await Report.create({
-        patientId,
-        doctorId,
-        treatmentId,
-        appointmentId,
+        patient,
+        doctor,
+        treatment,
+        appointment,
         reportType,
         title,
         description,
@@ -60,44 +60,73 @@ module.exports = {
         recommendations,
         isPrivate,
         mediaUrls,
+        organization: req.user.organization,
+        location: req.user.location
       }).fetch();
 
       return res.status(201).json({
+        status: 'success',
         message: 'Report created successfully',
-        report,
+        data: report
       });
     } catch (err) {
-      return res.status(500).json({ error: 'Error creating report' });
+      sails.log.error('Error creating report:', err);
+      return res.status(500).json({ 
+        status: 'error',
+        error: sails.config.responses.GENERIC.SERVER_ERROR 
+      });
     }
   },
 
   // Get reports for a patient
   getPatientReports: async function(req, res) {
     try {
-      const { patientId } = req.params;
+      const { patient } = req.params;
       const reports = await Report.find({
-        where: { patientId },
+        where: { 
+          patient,
+          location: req.user.location, 
+          deletedAt: 0 
+        },
         sort: 'date DESC',
       });
 
-      return res.json({ reports });
+      return res.json({
+        status: 'success',
+        data: reports
+      });
     } catch (err) {
-      return res.status(500).json({ error: 'Error fetching reports' });
+      sails.log.error('Error fetching reports:', err);
+      return res.status(500).json({ 
+        status: 'error',
+        error: sails.config.responses.GENERIC.SERVER_ERROR 
+      });
     }
   },
 
   // Get reports for a treatment
   getTreatmentReports: async function(req, res) {
     try {
-      const { treatmentId } = req.params;
+      const { treatment } = req.params;
       const reports = await Report.find({
-        where: { treatmentId },
+        where: { 
+          treatment,
+          location: req.user.location,
+          deletedAt: 0
+        },
         sort: 'date DESC',
       });
 
-      return res.json({ reports });
+      return res.json({
+        status: 'success',
+        data: reports
+      });
     } catch (err) {
-      return res.status(500).json({ error: 'Error fetching reports' });
+      sails.log.error('Error fetching reports:', err);
+      return res.status(500).json({ 
+        status: 'error',
+        error: sails.config.responses.GENERIC.SERVER_ERROR 
+      });
     }
   },
 
@@ -107,12 +136,26 @@ module.exports = {
       const { id } = req.params;
       const updateData = { ...req.body };
 
+      // Find the report to ensure it belongs to the user's location
+      const report = await Report.findOne({
+        id,
+        location: req.user.location,
+        deletedAt: 0
+      });
+
+      if (!report) {
+        return res.status(404).json({ 
+          status: 'error',
+          error: sails.config.responses.GENERIC.NOT_FOUND 
+        });
+      }
+
       // Handle new file uploads
       if (req.files && req.files.length > 0) {
         const mediaUrls = [];
         for (const file of req.files) {
           const result = await cloudinary.uploader.upload(file.path, {
-            folder: `dental-clinic/reports/${updateData.patientId}`,
+            folder: `dental-clinic/reports/${updateData.patient || report.patient}`,
             resource_type: 'auto',
           });
 
@@ -129,17 +172,22 @@ module.exports = {
         }
 
         // Merge new media URLs with existing ones
-        const existingReport = await Report.findOne({ id });
-        updateData.mediaUrls = [...(existingReport.mediaUrls || []), ...mediaUrls];
+        updateData.mediaUrls = [...(report.mediaUrls || []), ...mediaUrls];
       }
 
       const updatedReport = await Report.updateOne({ id }).set(updateData);
+      
       return res.json({
+        status: 'success',
         message: 'Report updated successfully',
-        report: updatedReport,
+        data: updatedReport
       });
     } catch (err) {
-      return res.status(500).json({ error: 'Error updating report' });
+      sails.log.error('Error updating report:', err);
+      return res.status(500).json({ 
+        status: 'error',
+        error: sails.config.responses.GENERIC.SERVER_ERROR 
+      });
     }
   },
 
@@ -147,10 +195,17 @@ module.exports = {
   destroy: async function(req, res) {
     try {
       const { id } = req.params;
-      const report = await Report.findOne({ id });
+      const report = await Report.findOne({ 
+        id,
+        location: req.user.location,
+        deletedAt: 0 
+      });
 
       if (!report) {
-        return res.status(404).json({ error: 'Report not found' });
+        return res.status(404).json({ 
+          status: 'error',
+          error: sails.config.responses.GENERIC.NOT_FOUND 
+        });
       }
 
       // Delete media files from Cloudinary
@@ -160,12 +215,21 @@ module.exports = {
         }
       }
 
-      // Delete report from database
-      await Report.destroyOne({ id });
+      // Soft delete by setting deletedAt timestamp
+      await Report.updateOne({ id }).set({
+        deletedAt: Date.now()
+      });
 
-      return res.json({ message: 'Report deleted successfully' });
+      return res.json({ 
+        status: 'success',
+        message: 'Report deleted successfully' 
+      });
     } catch (err) {
-      return res.status(500).json({ error: 'Error deleting report' });
+      sails.log.error('Error deleting report:', err);
+      return res.status(500).json({ 
+        status: 'error',
+        error: sails.config.responses.GENERIC.SERVER_ERROR 
+      });
     }
   },
 }; 

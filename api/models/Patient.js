@@ -32,39 +32,51 @@ module.exports = {
       type: 'string',
       defaultsTo: '',
     },
+    allergies: {
+      type: 'string',
+      defaultsTo: '',
+    },
     balance: {
       type: 'number',
       defaultsTo: 0,
     },
+    deletedAt: {
+      type: 'number',
+      defaultsTo: 0,
+    },
     // Organization and Location references
-    organizationId: {
+    organization: {
       model: 'organization',
       required: true,
     },
-    locationId: {
+    location: {
       model: 'location',
       required: true,
     },
+    addedBy: {
+      model: 'user',
+      required: true,
+    },
     // Associations
-    appointments: {
-      collection: 'appointment',
-      via: 'patientId',
-    },
-    treatments: {
-      collection: 'treatment',
-      via: 'patientId',
-    },
-    reports: {
-      collection: 'report',
-      via: 'patientId',
-    },
+    // appointments: {
+    //   collection: 'appointment',
+    //   via: 'patientId',
+    // },
+    // treatments: {
+    //   collection: 'treatment',
+    //   via: 'patientId',
+    // },
+    // reports: {
+    //   collection: 'report',
+    //   via: 'patientId',
+    // },
     // tests: {
     //   collection: 'test',
     //   via: 'patientId',
     // },
-    media: {
-      collection: 'media',
-      via: 'patientId',
-    },
+    // media: {
+    //   collection: 'media',
+    //   via: 'patientId',
+    // },
   },
 }; 

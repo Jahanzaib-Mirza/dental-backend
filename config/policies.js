@@ -26,7 +26,13 @@ module.exports.policies = {
 
   // Patient routes
   'PatientController': {
-    '*': ['isAuthenticated', 'hasRole']
+    '*': ['isAuthenticated'],
+    'create': ['isAuthenticated', 'isOwnerOrReceptionist'],
+    'update': ['isAuthenticated', 'isOwnerOrReceptionist'],
+    'destroy': ['isAuthenticated', 'isOwner'],
+    'findOne': ['isAuthenticated', 'isOwnerOrReceptionist'],
+    'find': ['isAuthenticated', 'isOwnerOrReceptionist'],
+
   },
 
   // Appointment routes

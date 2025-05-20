@@ -90,10 +90,5 @@ module.exports.routes = {
   'GET /api/reports/patient/:patientId': 'ReportController/getPatientReports',
   'GET /api/reports/treatment/:treatmentId': 'ReportController/getTreatmentReports',
   'PUT /api/reports/:id': 'ReportController/update',
-  'DELETE /api/reports/:id': 'ReportController/destroy',
-
-  'PUT /api/doctors/:id': {
-    action: 'user/updateDoctor',
-    policies: ['isAuthenticated', 'canUpdateDoctor']
-  }
+  'DELETE /api/reports/:id': 'ReportController/destroy'
 };
