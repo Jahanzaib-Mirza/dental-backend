@@ -1,17 +1,17 @@
 module.exports = {
   attributes: {
-    patientId: {
+    patient: {
       model: 'patient',
       required: true,
     },
-    doctorId: {
+    doctor: {
       model: 'user',
       required: true,
     },
-    treatmentId: {
+    treatment: {
       model: 'treatment',
     },
-    appointmentId: {
+    appointment: {
       model: 'appointment',
     },
     reportType: {

@@ -32,42 +32,34 @@ module.exports = {
       required: true,
     },
     // Associations
-    patientId: {
+    patient: {
       model: 'patient',
       required: true,
     },
-    doctorId: {
+    doctor: {
       model: 'user',
       required: true,
     },
-    receptionistId: {
+    addedBy: {
       model: 'user',
       required: true,
     },
     followUpFor: {
       model: 'appointment',
-    },
-    treatment: {
-      collection: 'treatment',
-      via: 'appointmentId',
-    },
-    media: {
-      collection: 'media',
-      via: 'appointmentId',
-    },
+    }
   },
 
   // Lifecycle callbacks
   beforeCreate: async function(values, proceed) {
     // Validate doctor availability
-    const doctor = await User.findOne({ id: values.doctorId });
+    const doctor = await User.findOne({ id: values.doctor });
     if (!doctor) {
       return proceed(new Error('Doctor not found'));
     }
 
     // Check if the time slot is available
     const existingAppointment = await Appointment.findOne({
-      doctorId: values.doctorId,
+      doctor: values.doctor,
       date: values.date,
       time: values.time,
       status: { '!=': 'cancelled' },

@@ -1,14 +1,14 @@
 module.exports = {
   attributes: {
-    appointmentId: {
+    appointment: {
       model: 'appointment',
       required: true,
     },
-    doctorId: {
+    doctor: {
       model: 'user',
       required: true,
     },
-    patientId: {
+    patient: {
       model: 'patient',
       required: true,
     },
@@ -45,27 +45,27 @@ module.exports = {
       defaultsTo: '',
     },
     // Organization and Location references
-    organizationId: {
+    organization: {
       model: 'organization',
       required: true,
     },
-    locationId: {
+    location: {
       model: 'location',
       required: true,
     },
     // Associations
-    media: {
-      collection: 'media',
-      via: 'treatmentId',
-    },
+    // media: {
+    //   collection: 'media',
+    //   via: 'treatmentId',
+    // },
     invoice: {
       model: 'invoice',
       unique: true,
     },
-    reports: {
-      collection: 'report',
-      via: 'treatmentId',
-    },
+    // reports: {
+    //   collection: 'report',
+    //   via: 'treatmentId',
+    // },
   },
 
   // Lifecycle callbacks

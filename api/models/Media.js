@@ -10,23 +10,23 @@ module.exports = {
       required: true,
     },
     // Organization and Location references
-    organizationId: {
+    organization: {
       model: 'organization',
       required: true,
     },
-    locationId: {
+    location: {
       model: 'location',
       required: true,
     },
     // Associations
-    patientId: {
+    patient: {
       model: 'patient',
       required: true,
     },
-    appointmentId: {
+    appointment: {
       model: 'appointment',
     },
-    treatmentId: {
+    treatment: {
       model: 'treatment',
     },
   },
@@ -34,7 +34,7 @@ module.exports = {
   // Lifecycle callbacks
   beforeCreate: async function(values, proceed) {
     // Validate that at least one association is provided
-    if (!values.patientId && !values.appointmentId && !values.treatmentId) {
+    if (!values.patient && !values.appointment && !values.treatment) {
       return proceed(new Error('Media must be associated with at least one entity'));
     }
     return proceed();

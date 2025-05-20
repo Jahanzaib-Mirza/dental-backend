@@ -28,16 +28,16 @@ module.exports = {
       defaultsTo: '',
     },
     // Organization and Location references
-    organizationId: {
+    organization: {
       model: 'organization',
       required: true,
     },
-    locationId: {
+    location: {
       model: 'location',
       required: true,
     },
     // Associations
-    recordedBy: {
+    addedBy: {
       model: 'user',
       required: true,
     },

@@ -37,27 +37,27 @@ module.exports = {
       defaultsTo: '',
     },
     // Organization and Location references
-    organizationId: {
+    organization: {
       model: 'organization',
       required: true,
     },
-    locationId: {
+    location: {
       model: 'location',
       required: true,
     },
     // Associations
-    patientId: {
+    patient: {
       model: 'patient',
       required: true,
     },
-    treatmentId: {
+    treatment: {
       model: 'treatment',
       required: true,
     },
-    payments: {
-      collection: 'payment',
-      via: 'invoiceId',
-    },
+    // payments: {
+    //   collection: 'payment',
+    //   via: 'invoiceId',
+    // },
   },
 
   // Lifecycle callbacks
@@ -73,12 +73,12 @@ module.exports = {
     return proceed();
   },
 
-  afterUpdate: async function(updatedRecord, proceed) {
-    // Update patient balance when payment status changes
-    if (updatedRecord.balanceDue !== undefined) {
-      await Patient.updateOne({ id: updatedRecord.patientId })
-        .set({ balance: updatedRecord.balanceDue });
-    }
-    return proceed();
-  },
+  // afterUpdate: async function(updatedRecord, proceed) {
+  //   // Update patient balance when payment status changes
+  //   if (updatedRecord.balanceDue !== undefined) {
+  //     await Patient.updateOne({ id: updatedRecord.patientId })
+  //       .set({ balance: updatedRecord.balanceDue });
+  //   }
+  //   return proceed();
+  // },
 }; 
