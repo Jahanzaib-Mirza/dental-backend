@@ -1,8 +1,7 @@
 module.exports = {
   attributes: {
     date: {
-      type: 'ref',
-      columnType: 'datetime',
+      type: 'string',
       required: true,
     },
     time: {
@@ -11,6 +10,10 @@ module.exports = {
     },
     reason: {
       type: 'string',
+      required: true,
+    },
+    appointmentTimestamp: {
+      type: 'number',
       required: true,
     },
     status: {
@@ -23,11 +26,11 @@ module.exports = {
       defaultsTo: '',
     },
     // Organization and Location references
-    organizationId: {
+    organization: {
       model: 'organization',
       required: true,
     },
-    locationId: {
+    location: {
       model: 'location',
       required: true,
     },

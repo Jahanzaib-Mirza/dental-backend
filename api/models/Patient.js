@@ -20,8 +20,7 @@ module.exports = {
       required: true,
     },
     dob: {
-      type: 'ref',
-      columnType: 'datetime',
+      type: 'string',
       required: true,
     },
     address: {

@@ -38,7 +38,13 @@ module.exports.policies = {
 
   // Appointment routes
   'AppointmentController': {
-    '*': ['isAuthenticated']
+    '*': ['isAuthenticated'],
+    'create': ['isAuthenticated', 'isOwnerOrReceptionist'],
+    'update': ['isAuthenticated', 'isOwnerOrReceptionist'],
+    'destroy': ['isAuthenticated', 'isOwner'],
+    'findOne': ['isAuthenticated', 'isOwnerOrReceptionist'],
+    'find': ['isAuthenticated', 'isOwnerOrReceptionist'],
+    'getAvailableSlots': ['isAuthenticated', 'isOwnerOrReceptionist'],
   },
 
   // Treatment routes

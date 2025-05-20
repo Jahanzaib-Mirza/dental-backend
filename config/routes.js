@@ -53,6 +53,7 @@ module.exports.routes = {
 
   // Appointment routes
   'GET /api/appointments': 'AppointmentController/find',
+  'GET /api/appointments/available-slots': 'AppointmentController/getAvailableSlots',
   'POST /api/appointments': 'AppointmentController/create',
   'PUT /api/appointments/:id': 'AppointmentController/update',
   'GET /api/appointments/:id': 'AppointmentController/findOne',
