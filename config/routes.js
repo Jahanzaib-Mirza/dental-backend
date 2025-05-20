@@ -42,10 +42,7 @@ module.exports.routes = {
   'GET /api/users': 'UserController/find',
   'GET /api/users/doctors': 'UserController/getDoctors',
   'POST /api/users': 'UserController/create',
-  'PUT /api/users/:id': {
-    action: 'user/update',
-    policies: ['isAuthenticated', 'canUpdateUser']
-  },
+  'PUT /api/users/:id': 'userController/update',
   'DELETE /api/users/:id': 'UserController/destroy',
 
   // Patient routes

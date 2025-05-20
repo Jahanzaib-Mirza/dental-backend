@@ -21,7 +21,8 @@ module.exports.policies = {
 
   // User routes
   'UserController': {
-    '*': ['isAuthenticated', 'isOwner'] // All user routes require authentication and owner role
+    '*': ['isAuthenticated', 'isOwner'], // All user routes require authentication and owner role,
+    'update':['isAuthenticated', 'canUpdateUser']
   },
 
   // Patient routes
@@ -37,27 +38,27 @@ module.exports.policies = {
 
   // Appointment routes
   'AppointmentController': {
-    '*': ['isAuthenticated', 'hasRole']
+    '*': ['isAuthenticated']
   },
 
   // Treatment routes
   'TreatmentController': {
-    '*': ['isAuthenticated', 'hasRole']
+    '*': ['isAuthenticated']
   },
 
   // Invoice routes
   'InvoiceController': {
-    '*': ['isAuthenticated', 'hasRole']
+    '*': ['isAuthenticated']
   },
 
   // Payment routes
   'PaymentController': {
-    '*': ['isAuthenticated', 'hasRole']
+    '*': ['isAuthenticated']
   },
 
   // Expense routes
   'ExpenseController': {
-    '*': ['isAuthenticated', 'hasRole']
+    '*': ['isAuthenticated']
   },
 
   // Media routes
@@ -67,6 +68,6 @@ module.exports.policies = {
 
   // Report routes
   'ReportController': {
-    '*': ['isAuthenticated', 'hasRole']
+    '*': ['isAuthenticated']
   }
 };
