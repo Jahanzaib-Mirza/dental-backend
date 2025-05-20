@@ -40,8 +40,12 @@ module.exports.routes = {
 
   // User routes
   'GET /api/users': 'UserController/find',
+  'GET /api/users/doctors': 'UserController/getDoctors',
   'POST /api/users': 'UserController/create',
-  'PUT /api/users/:id': 'UserController/update',
+  'PUT /api/users/:id': {
+    action: 'user/update',
+    policies: ['isAuthenticated', 'canUpdateUser']
+  },
   'DELETE /api/users/:id': 'UserController/destroy',
 
   // Patient routes
@@ -86,5 +90,10 @@ module.exports.routes = {
   'GET /api/reports/patient/:patientId': 'ReportController/getPatientReports',
   'GET /api/reports/treatment/:treatmentId': 'ReportController/getTreatmentReports',
   'PUT /api/reports/:id': 'ReportController/update',
-  'DELETE /api/reports/:id': 'ReportController/destroy'
+  'DELETE /api/reports/:id': 'ReportController/destroy',
+
+  'PUT /api/doctors/:id': {
+    action: 'user/updateDoctor',
+    policies: ['isAuthenticated', 'canUpdateDoctor']
+  }
 };

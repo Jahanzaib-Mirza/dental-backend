@@ -1,4 +1,5 @@
 module.exports = {
+  schema: true,
   attributes: {
     name: {
       type: 'string',
@@ -66,6 +67,10 @@ module.exports = {
       type: 'string',
       isIn: ['active', 'inactive', 'suspended'],
       defaultsTo: 'active',
+    },
+    deletedAt: {
+      type: 'number',
+      defaultsTo: 0,
     },
     // Organization and Location references
     organizationId: {

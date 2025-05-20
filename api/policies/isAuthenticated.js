@@ -4,28 +4,32 @@
 
 const jwt = require('jsonwebtoken');
 
-module.exports = async function(req, res, proceed) {
+module.exports = async function (req, res, proceed) {
   try {
-    // Get token from Authorization header
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ 
-        status: 'error',
-        error: sails.config.responses.AUTH.INVALID_TOKEN 
+    // Get token from header
+    const token = req.headers.authorization?.split(' ')[1];
+
+    if (!token) {
+      return res.status(401).json({
+        error: sails.config.responses.AUTH.NOT_AUTHENTICATED,
+        message: 'No token provided'
       });
     }
 
-    const token = authHeader.split(' ')[1];
-    
     // Verify token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    
+    const decoded = jwt.verify(token, sails.config.jwt.secret);
+    console.log(decoded);
+
     // Find user
-    const user = await User.findOne({ id: decoded.id });
+    const user = await User.findOne({ 
+      id: decoded.id,
+      status: 'active',
+    });
+
     if (!user) {
-      return res.status(401).json({ 
-        status: 'error',
-        error: sails.config.responses.AUTH.USER_NOT_FOUND 
+      return res.status(401).json({
+        error: sails.config.responses.AUTH.NOT_AUTHENTICATED,
+        message: 'User not found or inactive'
       });
     }
 
@@ -34,9 +38,25 @@ module.exports = async function(req, res, proceed) {
     return proceed();
   } catch (err) {
     sails.log.error('Token verification error:', err);
-    return res.status(401).json({ 
-      status: 'error',
-      error: sails.config.responses.AUTH.INVALID_TOKEN 
+
+    if (err.name === 'TokenExpiredError') {
+      return res.status(401).json({
+        error: sails.config.responses.AUTH.TOKEN_EXPIRED,
+        message: 'Token has expired',
+        expiredAt: err.expiredAt
+      });
+    }
+
+    if (err.name === 'JsonWebTokenError') {
+      return res.status(401).json({
+        error: sails.config.responses.AUTH.INVALID_TOKEN,
+        message: 'Invalid token'
+      });
+    }
+
+    return res.status(401).json({
+      error: sails.config.responses.AUTH.NOT_AUTHENTICATED,
+      message: 'Authentication failed'
     });
   }
 }; 

@@ -7,14 +7,13 @@
 module.exports.responses = {
   // Authentication Errors
   AUTH: {
-    EMAIL_EXISTS: {
-      code: 'AUTH_001',
-      message: 'Email already exists'
-    },
-    REQUIRED_FIELDS_MISSING: {
-      code: 'AUTH_002',
-      message: 'Required fields are missing'
-    },
+    NOT_AUTHENTICATED: 'NOT_AUTHENTICATED',
+    UNAUTHORIZED: 'UNAUTHORIZED',
+    INVALID_TOKEN: 'INVALID_TOKEN',
+    TOKEN_EXPIRED: 'TOKEN_EXPIRED',
+    USER_NOT_FOUND: 'USER_NOT_FOUND',
+    EMAIL_EXISTS: 'EMAIL_EXISTS',
+    REQUIRED_FIELDS_MISSING: 'REQUIRED_FIELDS_MISSING',
     INVALID_EMAIL: {
       code: 'AUTH_003',
       message: 'Invalid email format'
@@ -26,18 +25,6 @@ module.exports.responses = {
     INVALID_PHONE: {
       code: 'AUTH_005',
       message: 'Invalid phone number format'
-    },
-    INVALID_TOKEN: {
-      code: 'AUTH_006',
-      message: 'Invalid or missing authentication token'
-    },
-    USER_NOT_FOUND: {
-      code: 'AUTH_007',
-      message: 'User not found'
-    },
-    UNAUTHORIZED: {
-      code: 'AUTH_008',
-      message: 'Authentication required'
     },
     INSUFFICIENT_PERMISSIONS: {
       code: 'AUTH_009',
@@ -51,13 +38,8 @@ module.exports.responses = {
 
   // Generic Errors
   GENERIC: {
-    SERVER_ERROR: {
-      code: 'GEN_001',
-      message: 'Internal server error'
-    },
-    VALIDATION_ERROR: {
-      code: 'GEN_002',
-      message: 'Validation error'
-    }
+    SERVER_ERROR: 'SERVER_ERROR',
+    NOT_FOUND: 'NOT_FOUND',
+    VALIDATION_ERROR: 'VALIDATION_ERROR'
   }
 }; 
