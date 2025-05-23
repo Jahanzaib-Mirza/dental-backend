@@ -12,8 +12,14 @@ module.exports.responses = {
     INVALID_TOKEN: 'INVALID_TOKEN',
     TOKEN_EXPIRED: 'TOKEN_EXPIRED',
     USER_NOT_FOUND: 'USER_NOT_FOUND',
-    EMAIL_EXISTS: 'EMAIL_EXISTS',
-    REQUIRED_FIELDS_MISSING: 'REQUIRED_FIELDS_MISSING',
+    EMAIL_EXISTS: {
+      code: 'AUTH_001',
+      message: 'Email already exists'
+    },
+    REQUIRED_FIELDS_MISSING: {
+      code: 'AUTH_002',
+      message: 'Required fields missing'
+    },
     INVALID_EMAIL: {
       code: 'AUTH_003',
       message: 'Invalid email format'

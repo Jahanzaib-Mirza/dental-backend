@@ -133,10 +133,27 @@ module.exports = {
     }
   },
 
+  // Logout user
+  logout: async function(req, res) {
+    try {
+      res.clearCookie('token');
+      return res.json({
+        status: 'success',
+        message: 'Logout successful'
+      });
+    } catch (err) {
+      sails.log.error('Error in logout:', err);
+      return res.status(500).json({
+        status: 'error',
+        error: 'An error occurred during logout. Please try again.' // Or use a generic server error message
+      });
+    }
+  },
+
   // Get current user profile
   getProfile: async function(req, res) {
     try {
-      const user = await User.findOne({ id: req.user.id });
+      const user = await User.findOne({ id: req.user.id }).populateAll();
       if (!user) {
         return res.status(404).json({ 
           status: 'error',
@@ -144,17 +161,9 @@ module.exports = {
         });
       }
 
-      // Get organization and location details
-      const organization = await Organization.findOne({ id: user.organization });
-      const location = await Location.findOne({ id: user.location });
-
       return res.json({
         status: 'success',
-        data: {
-          user,
-          organization,
-          location,
-        }
+        data: user
       });
     } catch (err) {
       sails.log.error('Error fetching profile:', err);
