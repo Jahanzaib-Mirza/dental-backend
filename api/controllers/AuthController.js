@@ -114,8 +114,8 @@ module.exports = {
       // Set JWT as HttpOnly, Secure cookie
       res.cookie('token', token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production', // true in production (HTTPS)
-        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax', // 'Lax' or even 'Strict' for local dev
+        secure: true , // true in production (HTTPS)
+        sameSite: 'None', // 'Lax' or even 'Strict' for local dev
         maxAge: 24 * 60 * 60 * 1000 // 1 day
       });
 
