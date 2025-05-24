@@ -136,7 +136,11 @@ module.exports = {
   // Logout user
   logout: async function(req, res) {
     try {
-      res.clearCookie('token');
+      res.clearCookie('token', {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'None'
+      });
       return res.json({
         status: 'success',
         message: 'Logout successful'
@@ -145,7 +149,7 @@ module.exports = {
       sails.log.error('Error in logout:', err);
       return res.status(500).json({
         status: 'error',
-        error: 'An error occurred during logout. Please try again.' // Or use a generic server error message
+        error: 'An error occurred during logout. Please try again.'
       });
     }
   },
