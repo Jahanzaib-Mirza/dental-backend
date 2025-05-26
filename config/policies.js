@@ -75,5 +75,14 @@ module.exports.policies = {
   // Report routes
   'ReportController': {
     '*': ['isAuthenticated']
+  },
+
+  // Service routes
+  'ServiceController': {
+    'create': ['isAuthenticated', 'isOwnerOrReceptionist'],
+    'update': ['isAuthenticated', 'isOwnerOrReceptionist'],
+    'find': ['isAuthenticated', 'isOwnerOrReceptionistOrDoctor'],
+    'findOne': ['isAuthenticated', 'isOwnerOrReceptionistOrDoctor'],
+    'delete': ['isAuthenticated', 'isOwner']
   }
 };

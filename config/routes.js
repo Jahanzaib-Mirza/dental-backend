@@ -89,5 +89,12 @@ module.exports.routes = {
   'GET /api/reports/patient/:patientId': 'ReportController/getPatientReports',
   'GET /api/reports/treatment/:treatmentId': 'ReportController/getTreatmentReports',
   'PUT /api/reports/:id': 'ReportController/update',
-  'DELETE /api/reports/:id': 'ReportController/destroy'
+  'DELETE /api/reports/:id': 'ReportController/destroy',
+
+  // Service routes
+  'GET /api/services': 'ServiceController/find',
+  'POST /api/services': 'ServiceController/create',
+  'GET /api/services/:id': 'ServiceController/findOne',
+  'PUT /api/services/:id': 'ServiceController/update',
+  'DELETE /api/services/:id': 'ServiceController/delete'
 };
