@@ -25,6 +25,10 @@ module.exports = {
       type: 'string',
       defaultsTo: '',
     },
+    fee: {
+      type: 'number',
+      defaultsTo: 1000,
+    },
     // Organization and Location references
     organization: {
       model: 'organization',

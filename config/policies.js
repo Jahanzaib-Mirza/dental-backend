@@ -32,7 +32,7 @@ module.exports.policies = {
     'update': ['isAuthenticated', 'isOwnerOrReceptionist'],
     'destroy': ['isAuthenticated', 'isOwner'],
     'findOne': ['isAuthenticated', 'isOwnerOrReceptionist'],
-    'find': ['isAuthenticated', 'isOwnerOrReceptionist'],
+    'find': ['isAuthenticated', 'isOwnerOrReceptionistOrDoctor'],
 
   },
 
@@ -43,13 +43,16 @@ module.exports.policies = {
     'update': ['isAuthenticated', 'isOwnerOrReceptionist'],
     'destroy': ['isAuthenticated', 'isOwner'],
     'findOne': ['isAuthenticated', 'isOwnerOrReceptionist'],
-    'find': ['isAuthenticated', 'isOwnerOrReceptionist'],
-    'getAvailableSlots': ['isAuthenticated', 'isOwnerOrReceptionist'],
+    'find': ['isAuthenticated', 'isOwnerOrReceptionistOrDoctor'],
+    'getAvailableSlots': ['isAuthenticated', 'isOwnerOrReceptionistOrDoctor'],
   },
 
   // Treatment routes
   'TreatmentController': {
-    '*': ['isAuthenticated']
+    'create': ['isAuthenticated', 'isOwnerOrDoctor'],
+    'update': ['isAuthenticated', 'isOwnerOrDoctor'],
+    'find': ['isAuthenticated', 'isOwnerOrReceptionistOrDoctor'],
+    'findOne': ['isAuthenticated', 'isOwnerOrReceptionistOrDoctor']
   },
 
   // Invoice routes

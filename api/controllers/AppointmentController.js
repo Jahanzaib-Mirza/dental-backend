@@ -167,7 +167,7 @@ module.exports = {
       // Build query criteria
       const criteria = {};
 
-      if (doctorId) criteria.doctor = doctorId;
+      if (req.user.role === 'doctor') criteria.doctor = req.user.id;
       if (patientId) criteria.patient = patientId;
       if (status) criteria.status = status;
       if (organizationId) criteria.organization = organizationId;

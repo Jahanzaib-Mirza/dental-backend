@@ -29,8 +29,8 @@ module.exports = {
     },
     status: {
       type: 'string',
-      isIn: ['pending', 'paid', 'overdue', 'cancelled'],
-      defaultsTo: 'pending',
+      isIn: ['due', 'paid', 'overdue'],
+      defaultsTo: 'due',
     },
     notes: {
       type: 'string',

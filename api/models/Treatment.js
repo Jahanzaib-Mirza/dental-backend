@@ -16,17 +16,9 @@ module.exports = {
       type: 'string',
       required: true,
     },
-    procedure: {
-      type: 'string',
-      required: true,
-    },
     prescribedMedications: {
       type: 'json',
       defaultsTo: [],
-    },
-    followUpDate: {
-      type: 'ref',
-      columnType: 'datetime',
     },
     notes: {
       type: 'string',
@@ -36,11 +28,19 @@ module.exports = {
       type: 'json',
       defaultsTo: [],
     },
+    reports: {
+      type: 'json',
+      defaultsTo: [],
+    },
     followUpRecommended: {
       type: 'boolean',
       defaultsTo: false,
     },
-    followUpNotes: {
+    followUpDate: {
+      type: 'string',
+      defaultsTo: '',
+    },
+    followUpTime: {
       type: 'string',
       defaultsTo: '',
     },
@@ -69,23 +69,28 @@ module.exports = {
   },
 
   // Lifecycle callbacks
-  afterCreate: async function(newlyCreatedRecord, proceed) {
+  afterCreate: async function(record, proceed) {
     // If follow-up is recommended, create a new appointment
-    if (newlyCreatedRecord.followUpRecommended && newlyCreatedRecord.followUpDate) {
+    if (record.followUpRecommended && record.followUpDate) {
       try {
-        const appointment = await Appointment.findOne({ id: newlyCreatedRecord.appointmentId });
+        const appointment = await Appointment.findOne({ id: record.appointment });
         if (appointment) {
+          const appointmentDate = new Date(record.followUpDate);
+          const [hours, minutes] = record.followUpTime.split(':').map(Number);
+          appointmentDate.setHours(hours, minutes, 0, 0);
+
           await Appointment.create({
-            patientId: newlyCreatedRecord.patientId,
-            doctorId: newlyCreatedRecord.doctorId,
-            receptionistId: appointment.receptionistId,
-            date: newlyCreatedRecord.followUpDate,
-            time: appointment.time, // Use same time slot
+            patient: record.patient,
+            doctor: record.doctor,
+            addedBy: record.doctor,
+            date: appointmentDate.toISOString(),
+            time: record.followUpTime, // Use same time slot
             reason: 'Follow-up appointment',
             status: 'pending',
-            followUpFor: newlyCreatedRecord.appointmentId,
-            organizationId: newlyCreatedRecord.organizationId,
-            locationId: newlyCreatedRecord.locationId,
+            followUpFor: record.appointment,
+            organization: record.organization,
+            location: record.location,
+            fee: 0,
           });
         }
       } catch (err) {
