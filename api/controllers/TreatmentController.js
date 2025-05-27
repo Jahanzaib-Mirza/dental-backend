@@ -15,6 +15,7 @@ module.exports = {
                 followUpRecommended,
                 followUpDate,
                 followUpTime,
+                reports,
             } = req.body;
 
             // Validate required fields
@@ -94,6 +95,7 @@ module.exports = {
                 followUpRecommended: followUpRecommended || false,
                 followUpDate: followUpDate || '',
                 followUpTime: followUpTime || '',
+                reports: reports || [],
                 organization: req.user.organization,
                 location: req.user.location,
             }).fetch();
@@ -113,7 +115,7 @@ module.exports = {
             const month = String(date.getMonth() + 1).padStart(2, '0');
             const count = await Invoice.count();
             const invoiceNum = `INV-${year}${month}-${String(count + 1).padStart(4, '0')}`;
-            
+
             const invoice = await Invoice.create({
                 invoiceNumber: invoiceNum,
                 date: new Date(),
