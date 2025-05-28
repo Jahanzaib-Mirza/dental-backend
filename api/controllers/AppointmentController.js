@@ -202,7 +202,7 @@ module.exports = {
         .populate('organization')
         .populate('location')
         .populate('followUpFor')
-        .sort('appointmentTimestamp ASC');
+        .sort('appointmentTimestamp DESC');
 
       return res.json(appointments);
     } catch (error) {

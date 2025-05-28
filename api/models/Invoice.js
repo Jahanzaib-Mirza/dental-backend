@@ -36,6 +36,9 @@ module.exports = {
       type: 'string',
       defaultsTo: '',
     },
+    services: {
+      type: 'json',
+    },
     // Organization and Location references
     organization: {
       model: 'organization',

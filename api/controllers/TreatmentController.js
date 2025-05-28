@@ -125,6 +125,7 @@ module.exports = {
                 total: total,
                 status: 'due',
                 patient: patient,
+                services: servicesUsed,
                 treatment: newTreatment.id,
                 organization: req.user.organization,
                 location: req.user.location,

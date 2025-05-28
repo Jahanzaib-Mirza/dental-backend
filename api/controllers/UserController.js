@@ -126,6 +126,7 @@ module.exports = {
         licenseNumber,
         education,
         email,
+        profileImage,
         role,
       } = req.body;
 
@@ -148,6 +149,7 @@ module.exports = {
 
       // Common fields that all users can update
       if (name) updateData.name = name;
+      if (profileImage) updateData.profileImage = profileImage;
       if (phone) updateData.phone = phone;
       if (gender) updateData.gender = gender;
       if (age) updateData.age = age;
@@ -181,6 +183,90 @@ module.exports = {
       return res.status(500).json({ 
         status: 'error',
         error: sails.config.responses.GENERIC.SERVER_ERROR 
+      });
+    }
+  },
+
+  changePassword: async function (req, res) {
+    try {
+      const { currentPassword, newPassword, confirmPassword } = req.body;
+
+      // Validate required fields
+      if (!currentPassword || !newPassword || !confirmPassword) {
+        return res.status(400).json({
+          status: 'error',
+          error: 'Current password, new password, and confirm password are required'
+        });
+      }
+
+      // Validate new password length
+      if (newPassword.length < 6) {
+        return res.status(400).json({
+          status: 'error',
+          error: sails.config.responses.AUTH.INVALID_PASSWORD
+        });
+      }
+
+      // Check if new password and confirm password match
+      if (newPassword !== confirmPassword) {
+        return res.status(400).json({
+          status: 'error',
+          error: 'New password and confirm password do not match'
+        });
+      }
+
+      // Find the current user with password
+      const user = await User.findOne({
+        id: req.user.id,
+        deletedAt: 0
+      });
+
+      if (!user) {
+        return res.status(404).json({
+          status: 'error',
+          error: sails.config.responses.AUTH.USER_NOT_FOUND
+        });
+      }
+
+      // Verify current password
+      const bcrypt = require('bcryptjs');
+      const isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.password);
+
+      if (!isCurrentPasswordValid) {
+        return res.status(400).json({
+          status: 'error',
+          error: 'Current password is incorrect'
+        });
+      }
+
+      // Check if new password is different from current password
+      const isSamePassword = await bcrypt.compare(newPassword, user.password);
+      if (isSamePassword) {
+        return res.status(400).json({
+          status: 'error',
+          error: 'New password must be different from current password'
+        });
+      }
+
+      // Hash new password
+      const salt = await bcrypt.genSalt(10);
+      const hashedNewPassword = await bcrypt.hash(newPassword, salt);
+
+      // Update user password
+      await User.updateOne({ id: req.user.id }).set({
+        password: hashedNewPassword
+      });
+
+      return res.status(200).json({
+        status: 'success',
+        message: 'Password changed successfully'
+      });
+
+    } catch (err) {
+      sails.log.error('Error changing password:', err);
+      return res.status(500).json({
+        status: 'error',
+        error: sails.config.responses.GENERIC.SERVER_ERROR
       });
     }
   }

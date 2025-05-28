@@ -16,9 +16,10 @@ module.exports = async function (req, res, proceed) {
   if (req.user.role === 'owner') {
     return proceed();
   }
-
+  console.log(req.user.id, id);
+  console.log(req.user.id === id);
   // Users can only update their own information
-  if (req.user.id === parseInt(id)) {
+  if (req.user.id === id) {
     return proceed();
   }
 

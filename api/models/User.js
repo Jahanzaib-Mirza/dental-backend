@@ -99,14 +99,4 @@ module.exports = {
     const bcrypt = require('bcryptjs');
     return await bcrypt.compare(password, this.password);
   },
-
-  beforeUpdate: async function(values, proceed) {
-    // Hash password if it's being updated
-    if (values.password) {
-      const bcrypt = require('bcryptjs');
-      const salt = await bcrypt.genSalt(10);
-      values.password = await bcrypt.hash(values.password, salt);
-    }
-    return proceed();
-  },
 }; 

@@ -45,12 +45,14 @@ module.exports.routes = {
   'POST /api/users': 'UserController/create',
   'PUT /api/users/:id': 'userController/update',
   'DELETE /api/users/:id': 'UserController/destroy',
+  'PUT /api/users/change-password': 'UserController/changePassword',
 
   // Patient routes
   'GET /api/patients': 'PatientController/find',
   'POST /api/patients': 'PatientController/create',
   'PUT /api/patients/:id': 'PatientController/update',
   'GET /api/patients/:id': 'PatientController/findOne',
+  'GET /api/patients/:id/details': 'PatientController/getPatientDetails',
 
   // Appointment routes
   'GET /api/appointments': 'AppointmentController/find',
@@ -70,6 +72,7 @@ module.exports.routes = {
   'POST /api/invoices': 'InvoiceController/create',
   'PUT /api/invoices/:id': 'InvoiceController/update',
   'GET /api/invoices/:id': 'InvoiceController/findOne',
+  'PUT /api/invoices/:id/mark-paid': 'InvoiceController/markAsPaid',
 
   // Payment routes
   'POST /api/payments': 'PaymentController/create',

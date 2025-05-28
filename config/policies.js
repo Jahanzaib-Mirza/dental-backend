@@ -22,7 +22,8 @@ module.exports.policies = {
   // User routes
   'UserController': {
     '*': ['isAuthenticated', 'isOwner'], // All user routes require authentication and owner role,
-    'update':['isAuthenticated', 'canUpdateUser']
+    'update':['isAuthenticated', 'canUpdateUser'],
+    'changePassword': ['isAuthenticated'] // Any authenticated user can change their own password
   },
 
   // Patient routes
@@ -33,7 +34,7 @@ module.exports.policies = {
     'destroy': ['isAuthenticated', 'isOwner'],
     'findOne': ['isAuthenticated', 'isOwnerOrReceptionist'],
     'find': ['isAuthenticated', 'isOwnerOrReceptionistOrDoctor'],
-
+    'getPatientDetails': ['isAuthenticated', 'isOwnerOrReceptionistOrDoctor']
   },
 
   // Appointment routes
@@ -57,7 +58,12 @@ module.exports.policies = {
 
   // Invoice routes
   'InvoiceController': {
-    '*': ['isAuthenticated']
+    '*': ['isAuthenticated'],
+    'find': ['isAuthenticated', 'isOwnerOrReceptionist'],
+    'findOne': ['isAuthenticated', 'isOwnerOrReceptionist'],
+    'create': ['isAuthenticated', 'isOwnerOrReceptionist'],
+    'update': ['isAuthenticated', 'isOwnerOrReceptionist'],
+    'markAsPaid': ['isAuthenticated', 'isOwnerOrReceptionist']
   },
 
   // Payment routes
