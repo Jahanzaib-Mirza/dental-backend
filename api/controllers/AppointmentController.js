@@ -80,7 +80,8 @@ module.exports = {
         reason, 
         status,
         notes,
-        followUpForId
+        followUpForId,
+        doctorId
       } = req.body;
 
       if (!id) {
@@ -100,7 +101,7 @@ module.exports = {
       if (date) {
         const appointmentDate = new Date(date);
         if (isNaN(appointmentDate)) {
-          return res.badRequest({ message: 'Invalid date format. Please use ISO format (YYYY-MM-DDT00:00:00.000Z)' });
+          return res.badRequest({ message: 'Invalid date format. Please use ISO format (YYYY-MM-DDT00:00:00.000Z)'});
         }
         updateData.date = appointmentDate.toISOString(); // Store in ISO format
       }
@@ -133,6 +134,7 @@ module.exports = {
       }
       if (notes !== undefined) updateData.notes = notes;
       if (followUpForId) updateData.followUpFor = followUpForId;
+      if (doctorId) updateData.doctor = doctorId;
 
       // Update the appointment
       const updatedAppointment = await Appointment.updateOne({ id }).set(updateData);

@@ -67,6 +67,8 @@ module.exports = {
                 addedBy: req.user.id
             }).fetch();
 
+            newExpense.addedBy = req.user;
+
             return res.status(201).json({
                 status: 'success',
                 message: 'Expense created successfully',
@@ -269,7 +271,7 @@ module.exports = {
             if (notes !== undefined) updateData.notes = notes;
 
             const updatedExpense = await Expense.updateOne({ id }).set(updateData);
-            updatedExpense.addedBy = expense.addedBy    ;
+            updatedExpense.addedBy = expense.addedBy;
 
             return res.json({
                 status: 'success',
