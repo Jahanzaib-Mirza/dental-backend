@@ -94,9 +94,9 @@ module.exports = {
       };
 
       // If receptionist, only show doctors
-      if (req.user.role === 'receptionist') {
-        query.role = 'doctor';
-      }
+      // if (req.user.role === 'receptionist') {
+      //   query.role = 'doctor';
+      // }
 
       // Fetch users
       const users = await User.find(query).omit(['password']);

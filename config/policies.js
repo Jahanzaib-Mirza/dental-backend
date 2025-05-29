@@ -27,6 +27,7 @@ module.exports.policies = {
   // User routes
   'UserController': {
     '*': ['isAuthenticated', 'isOwner'], // All user routes require authentication and owner role,
+    'getDoctors':['isAuthenticated', 'isOwnerorReceptionist'],
     'update':['isAuthenticated', 'canUpdateUser'],
     'changePassword': ['isAuthenticated'] // Any authenticated user can change their own password
   },
