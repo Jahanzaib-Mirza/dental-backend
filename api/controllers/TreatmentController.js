@@ -205,7 +205,7 @@ module.exports = {
      */
     findOne: async function (req, res) {
         try {
-            const { id } = req.params;
+            const { id } = req.params; // appointment id
 
             if (!req.user || !req.user.location) {
                 return res.status(400).json({
@@ -215,15 +215,11 @@ module.exports = {
             }
 
             const findCriteria = {
-                id,
+                appointment: id,
                 location: req.user.location,
                 organization: req.user.organization,
             };
 
-            // If user is a doctor, only show their treatments
-            if (req.user.role === 'doctor') {
-                findCriteria.doctor = req.user.id;
-            }
 
             const treatment = await Treatment.findOne(findCriteria)
                 .populate('appointment')
