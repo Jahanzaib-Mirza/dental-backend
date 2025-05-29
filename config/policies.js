@@ -19,6 +19,11 @@ module.exports.policies = {
     '*': 'isAuthenticated' // All other auth routes require authentication
   },
 
+  // Dashboard routes
+  'DashboardController': {
+    '*': ['isAuthenticated'] // All dashboard routes require authentication
+  },
+
   // User routes
   'UserController': {
     '*': ['isAuthenticated', 'isOwner'], // All user routes require authentication and owner role,

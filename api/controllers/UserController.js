@@ -15,7 +15,7 @@ module.exports = {
         });
       }
 
-      const { email, name, phone, role, gender, age, experience, specialization } = req.body;
+      const { email, name, phone, role, gender, age, experience, specialization,licenseNumber } = req.body;
       if (!email || !name || !phone || !role) {
         return res.status(400).json({ 
           status: 'error',
@@ -49,6 +49,7 @@ module.exports = {
       if (age) userData.age = age;
       if (experience) userData.experience = experience;
       if (specialization) userData.specialization = specialization;
+      if (licenseNumber) userData.licenseNumber = licenseNumber;
 
       // Create user
       const user = await User.create(userData).fetch();

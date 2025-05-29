@@ -39,6 +39,9 @@ module.exports.routes = {
   'GET /api/auth/profile': 'AuthController/getProfile',
   'POST /api/auth/logout': 'AuthController/logout',
 
+  // Dashboard routes
+  'GET /api/dashboard': 'DashboardController/getDashboardData',
+
   // User routes
   'GET /api/users': 'UserController/find',
   'GET /api/users/doctors': 'UserController/getDoctors',
