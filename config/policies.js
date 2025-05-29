@@ -46,6 +46,7 @@ module.exports.policies = {
     'findOne': ['isAuthenticated', 'isOwnerOrReceptionist'],
     'find': ['isAuthenticated', 'isOwnerOrReceptionistOrDoctor'],
     'getAvailableSlots': ['isAuthenticated', 'isOwnerOrReceptionistOrDoctor'],
+    'cancel': ['isAuthenticated', 'isOwnerOrReceptionistOrDoctor']
   },
 
   // Treatment routes
@@ -73,7 +74,12 @@ module.exports.policies = {
 
   // Expense routes
   'ExpenseController': {
-    '*': ['isAuthenticated']
+    'find': ['isAuthenticated', 'isOwnerOrReceptionist'],
+    'findOne': ['isAuthenticated', 'isOwnerOrReceptionist'],
+    'create': ['isAuthenticated', 'isOwnerOrReceptionist'],
+    'update': ['isAuthenticated', 'isOwnerOrReceptionist'],
+    'delete': ['isAuthenticated', 'isOwner'],
+    'summary': ['isAuthenticated', 'isOwnerOrReceptionist']
   },
 
   // Media routes

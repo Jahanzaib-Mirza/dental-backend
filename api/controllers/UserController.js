@@ -87,7 +87,7 @@ module.exports = {
       // Build query based on user role
       const query = {
         location: req.user.location,
-        role: 'doctor',
+        role: { in: ['doctor', 'owner'] },
         status: 'active',
         deletedAt: 0
       };

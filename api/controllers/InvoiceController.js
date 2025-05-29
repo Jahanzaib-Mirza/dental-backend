@@ -170,10 +170,26 @@ module.exports = {
         });
       }
 
+      // Check if invoice is already paid
+      if (invoice.status === 'paid') {
+        return res.status(400).json({
+          status: 'error',
+          error: 'Invoice is already marked as paid'
+        });
+      }
+
       // Update invoice status to paid
       const updatedInvoice = await Invoice.updateOne({ id }).set({
         status: 'paid'
       });
+
+      // Update patient balance by subtracting the invoice total
+      const patient = await Patient.findOne({ id: invoice.patient });
+      if (patient) {
+        await Patient.updateOne({ id: invoice.patient }).set({
+          balance: Math.max(0, patient.balance - invoice.total) // Ensure balance doesn't go negative
+        });
+      }
 
       return res.json({
         status: 'success',

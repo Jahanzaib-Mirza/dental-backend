@@ -1,6 +1,10 @@
 module.exports = {
   attributes: {
-    title: {
+    expenseNumber: {
+      type: 'string',
+      required: true,
+    },
+    description: {
       type: 'string',
       required: true,
     },
@@ -9,18 +13,12 @@ module.exports = {
       required: true,
     },
     date: {
-      type: 'ref',
-      columnType: 'datetime',
+      type: 'number',
       required: true,
     },
     category: {
       type: 'string',
-      isIn: ['rent', 'utilities', 'supplies', 'equipment', 'salary', 'maintenance', 'other'],
-      required: true,
-    },
-    paymentMethod: {
-      type: 'string',
-      isIn: ['cash', 'card', 'bank_transfer', 'other'],
+      // isIn: ['rent', 'utilities', 'supplies', 'equipment', 'salary', 'maintenance', 'other'],
       required: true,
     },
     notes: {
@@ -40,6 +38,10 @@ module.exports = {
     addedBy: {
       model: 'user',
       required: true,
+    },
+    deletedAt: {
+      type: 'number',
+      defaultsTo: 0,
     },
   },
 

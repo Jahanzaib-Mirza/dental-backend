@@ -136,6 +136,12 @@ module.exports = {
                 invoice: invoice.id
             });
 
+            // Update patient balance by adding the invoice total
+            await Patient.updateOne({ id: patient }).set({
+                balance: (await Patient.findOne({ id: patient })).balance + total
+            });
+            
+
             // Update appointment status to completed
             await Appointment.updateOne({ id: appointment }).set({
                 status: 'completed'

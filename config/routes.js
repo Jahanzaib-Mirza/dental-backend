@@ -53,6 +53,8 @@ module.exports.routes = {
   'PUT /api/patients/:id': 'PatientController/update',
   'GET /api/patients/:id': 'PatientController/findOne',
   'GET /api/patients/:id/details': 'PatientController/getPatientDetails',
+  // 'GET /api/patients/:id/balance': 'PatientController/getBalance',
+  // 'PUT /api/patients/:id/balance': 'PatientController/updateBalance',
 
   // Appointment routes
   'GET /api/appointments': 'AppointmentController/find',
@@ -60,6 +62,7 @@ module.exports.routes = {
   'POST /api/appointments': 'AppointmentController/create',
   'PUT /api/appointments/:id': 'AppointmentController/update',
   'GET /api/appointments/:id': 'AppointmentController/findOne',
+  'PUT /api/appointments/:id/cancel': 'AppointmentController/cancel',
 
   // Treatment routes
   'GET /api/treatments': 'TreatmentController/find',
@@ -81,7 +84,10 @@ module.exports.routes = {
   // Expense routes
   'GET /api/expenses': 'ExpenseController/find',
   'POST /api/expenses': 'ExpenseController/create',
+  'GET /api/expenses/summary': 'ExpenseController/summary',
+  'GET /api/expenses/:id': 'ExpenseController/findOne',
   'PUT /api/expenses/:id': 'ExpenseController/update',
+  'DELETE /api/expenses/:id': 'ExpenseController/delete',
 
   // Media routes
   'POST /api/media/upload': 'MediaController/upload',

@@ -239,6 +239,70 @@ module.exports = {
   },
 
   /**
+   * Cancel an appointment
+   */
+  cancel: async function(req, res) {
+    try {
+      const { id } = req.params;
+      const { reason } = req.body;
+
+      if (!id) {
+        return res.badRequest({ message: 'Appointment ID is required' });
+      }
+
+      // Find the appointment
+      const appointment = await Appointment.findOne({
+        id,
+        organization: req.user.organization,
+        location: req.user.location
+      });
+
+      if (!appointment) {
+        return res.notFound({ message: 'Appointment not found' });
+      }
+
+      // Check if appointment is already cancelled
+      if (appointment.status === 'cancelled') {
+        return res.badRequest({ message: 'Appointment is already cancelled' });
+      }
+
+      // Check if appointment is already completed
+      if (appointment.status === 'completed') {
+        return res.badRequest({ message: 'Cannot cancel a completed appointment' });
+      }
+
+      // Only allow cancellation by appointment owner (doctor), patient, or admin roles
+      if (req.user.role === 'doctor' && appointment.doctor !== req.user.id) {
+        return res.forbidden({ message: 'You can only cancel your own appointments' });
+      }
+
+      // Update appointment status to cancelled
+      const cancelledAppointment = await Appointment.updateOne({ id }).set({
+        status: 'cancelled',
+        notes: reason ? `${appointment.notes || ''}\nCancellation reason: ${reason}`.trim() : appointment.notes
+      });
+
+      if (!cancelledAppointment) {
+        return res.serverError({ message: 'Failed to cancel appointment' });
+      }
+
+      return res.json({
+        status: 'success',
+        message: 'Appointment cancelled successfully',
+        data: cancelledAppointment
+      });
+
+    } catch (error) {
+      sails.log.error('Error cancelling appointment:', error);
+      return res.serverError({ 
+        status: 'error',
+        message: 'An error occurred while cancelling the appointment', 
+        error: error.message 
+      });
+    }
+  },
+
+  /**
    * Get available time slots for a doctor on a specific date
    */
   getAvailableSlots: async function(req, res) {
